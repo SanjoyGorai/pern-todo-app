@@ -70,7 +70,17 @@ app.post('/todos/:id', async (req, res) => {
         console.log(error.message);
     }
 });
-
+app.delete('/todos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateTodos = await pool.query(
+            'DELETE from todos WHERE todo_id =  $1',
+            [ id]);
+        res.json('Todo deleted')
+    } catch (error) {
+        console.log(error.message);
+    }
+});
 
 
 app.get('/', (req, res) => res.send('Hello World from Express'));
