@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import pg from 'pg';
 const { Client, Pool } = pg;
 
@@ -10,10 +11,13 @@ const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
     password: 'sanjoypql',
-    database: 'todo',
+    database: 'perntodo',
     port: 5432
 });
 
+
+app.use(cors());
+app.use(express.json())
 
 pool.query('SELECT NOW ()', (err, res) => {
     if (err) {
@@ -23,7 +27,19 @@ pool.query('SELECT NOW ()', (err, res) => {
     }
 });
 
-app.get('/', (req, res) => res.send('Hello World'));
+// pool.query();
+
+app.post('/todos', async (req, res) => {
+    try {
+        const { desctiption } = req.body;
+        const newTodo = await pool.query('INSERT INTO todos (desctiption) VALUES($1)', [desctiption]);
+        res.json(newTodo)
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+app.get('/', (req, res) => res.send('Hello World from Express'));
 
 app.listen(PORT, () => {
     console.log(`Express server listening on port http://localhost:${PORT} `);
