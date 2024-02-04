@@ -58,6 +58,20 @@ app.get('/todos/:id', async (req, res) => {
     }
 });
 
+app.post('/todos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { desctiption } = req.body;
+        const updateTodos = await pool.query(
+            'UPDATE todos SET desctiption = $1 WHERE todo_id = $2 ',
+            [desctiption, id]);
+        res.json('Todo updated')
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+
 
 app.get('/', (req, res) => res.send('Hello World from Express'));
 
