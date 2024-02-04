@@ -39,14 +39,25 @@ app.post('/todos', async (req, res) => {
     }
 });
 
-app.get('/todos', async(req, res) => {
+app.get('/todos', async (req, res) => {
     try {
         const allTodos = await pool.query('SELECT * FROM todos');
         res.json(allTodos.rows)
     } catch (error) {
-        
+        console.log(error);
     }
 });
+
+app.get('/todos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const allTodos = await pool.query('SELECT * FROM todos WHERE todo_id = $1', [id]);
+        res.json(allTodos.rows[0])
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 
 app.get('/', (req, res) => res.send('Hello World from Express'));
 
