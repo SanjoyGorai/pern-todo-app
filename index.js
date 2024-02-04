@@ -33,9 +33,18 @@ app.post('/todos', async (req, res) => {
     try {
         const { desctiption } = req.body;
         const newTodo = await pool.query('INSERT INTO todos (desctiption) VALUES($1)', [desctiption]);
-        res.json(newTodo)
+        res.json(newTodo.rows[0])
     } catch (error) {
         console.log(error);
+    }
+});
+
+app.get('/todos', async(req, res) => {
+    try {
+        const allTodos = await pool.query('SELECT * FROM todos');
+        res.json(allTodos.rows)
+    } catch (error) {
+        
     }
 });
 
